@@ -2,8 +2,10 @@
  * Required External Modules and Interfaces
  */
 import {Router, Request, Response } from 'express';
+
 import * as ItemService from "./items.service";
 import { BaseItem, Item } from './item.interface';
+import {checkJwt} from '../middleware/authz.middleware';
 
 /**
  * Router Definition
@@ -14,6 +16,8 @@ export const itemsRouter = Router();
 /**
  * Controller Definitions
  */
+
+// Public API endpoints
 
 // GET items
 itemsRouter.get("/", async (req: Request, res: Response) => {
@@ -41,6 +45,9 @@ itemsRouter.get("/:id",async (req:Request, res:Response) => {
         res.status(500).send(e.message);
     }
 });
+
+// Protected API endpoints
+itemsRouter.use(checkJwt);
 
 // POST items
 itemsRouter.post("/",async (req:Request, res:Response) => {
